@@ -1,0 +1,8 @@
+.goat/
+bin/
+rel/
+
+udpoop
+tags
+
+.*.sw[op]

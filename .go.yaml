@@ -1,0 +1,6 @@
+---
+path: github.com/kinghrothgar/UDPoop
+deps:
+    - loc: github.com/mediocregopher/flagconfig
+
+    - loc: github.com/grooveshark/golib
