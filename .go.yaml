@@ -1,5 +1,5 @@
 ---
-path: github.com/kinghrothgar/UDPoop
+path: github.com/kinghrothgar/UDumP
 deps:
     - loc: github.com/mediocregopher/lever
 
