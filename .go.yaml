@@ -4,3 +4,5 @@ deps:
     - loc: github.com/mediocregopher/lever
 
     - loc: github.com/grooveshark/golib
+
+    - loc:  bitbucket.org/kardianos/osext

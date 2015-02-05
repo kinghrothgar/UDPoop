@@ -18,10 +18,16 @@ var (
 func main() {
 	gslog.Info("Goblin started [build commit: %s, build date: %s]", buildCommit, buildDate)
 
+	// Setup config and logging
 	if err := conf.Parse(); err != nil {
 		gslog.Fatal("MAIN: failed to parse conf with error: %s", err.Error())
 	}
-	addr, err := net.ResolveUDPAddr("udp4", "127.0.0.1:60000")
+	gslog.SetMinimumLevel(conf.GetStr("--log-level"))
+	if logFile, set := conf.ParamStr("--log-file"); set {
+		gslog.SetLogFile(logFile)
+	}
+
+	addr, err := net.ResolveUDPAddr("udp4", conf.GetStr("--host")+":"+conf.GetStr("--port"))
 	if err != nil {
 		gslog.Fatal(err.Error())
 	}
@@ -30,13 +36,13 @@ func main() {
 		gslog.Fatal(err.Error())
 	}
 	defer conn.Close()
-	r := bufio.NewReaderSize(conn, 52428800)
+	r := bufio.NewReaderSize(conn, conf.GetInt("--buffer"))
 	f, err := os.OpenFile("/tmp/udpoop", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0664)
 	if err != nil {
 		gslog.Fatal(err.Error())
 	}
 	defer f.Close()
-	w := bufio.NewWriterSize(f, 52428800)
+	w := bufio.NewWriterSize(f, conf.GetInt("--buffer"))
 	go func() {
 		n, err := w.ReadFrom(r)
 		if err != nil {
@@ -44,7 +50,7 @@ func main() {
 		}
 		gslog.Info("Read %d bytes", n)
 	}()
-	tiktok := time.NewTicker(5 * time.Second)
+	tiktok := time.NewTicker(time.Duration(conf.GetInt("--flush")) * time.Second)
 	for {
 		<-tiktok.C
 		w.Flush()
