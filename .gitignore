@@ -2,7 +2,7 @@
 bin/
 rel/
 
-udpoop
+udump
 tags
 
 .*.sw[op]
